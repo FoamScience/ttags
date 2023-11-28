@@ -9,6 +9,7 @@ pub fn build_cli<'a>() -> App<'a, 'a> {
         .arg(tag_file_arg())
         .arg(relative_arg())
         .arg(append_arg())
+        .arg(file_type_detection_chars_arg())
         .subcommand(lsp_subcommand())
 }
 
@@ -44,6 +45,16 @@ fn append_arg<'a>() -> Arg<'a, 'a> {
         .long("append")
         .takes_value(false)
         .help("Append tags to existing file")
+}
+
+fn file_type_detection_chars_arg<'a>() -> Arg<'a, 'a> {
+    Arg::with_name("file_type_detection_chars")
+        .short("l")
+        .long("file-type-detection-chars")
+        .takes_value(true)
+        .required(false)
+        .help("Number of header characters to use for file type detection. Default is 800")
+        .default_value("800")
 }
 
 fn lsp_subcommand<'a>() -> App<'a, 'a> {

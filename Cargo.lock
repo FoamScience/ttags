@@ -475,6 +475,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tree-sitter-foam"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3cac5655c4fa35110206b9536dd4e2e515cdb1633d74645ac19e05df9575a6a7"
+dependencies = [
+ "cc",
+ "tree-sitter",
+]
+
+[[package]]
 name = "tree-sitter-javascript"
 version = "0.20.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -539,6 +549,7 @@ dependencies = [
  "serde_json",
  "sugar_path",
  "tree-sitter",
+ "tree-sitter-foam",
  "tree-sitter-javascript",
  "tree-sitter-nix",
  "tree-sitter-ruby",

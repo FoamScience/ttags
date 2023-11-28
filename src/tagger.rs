@@ -10,6 +10,7 @@ use crate::haskell;
 use crate::javascript;
 use crate::nix;
 use crate::ruby;
+use crate::foam;
 use crate::rust;
 use crate::swift;
 use crate::tag::Tag;
@@ -18,6 +19,7 @@ pub struct Tagger<'a> {
     pub context: TagsContext,
     pub ruby_config: TagsConfiguration,
     pub javascript_config: TagsConfiguration,
+    pub foam_config: TagsConfiguration,
     pub rust_config: TagsConfiguration,
     pub haskell_config: TagsConfiguration,
     pub nix_config: TagsConfiguration,
@@ -30,6 +32,7 @@ impl Tagger<'_> {
         let context = TagsContext::new();
         let ruby_config = ruby::config();
         let javascript_config = javascript::config();
+        let foam_config = foam::config();
         let rust_config = rust::config();
         let haskell_config = haskell::config();
         let nix_config = nix::config();
@@ -40,6 +43,7 @@ impl Tagger<'_> {
             context,
             ruby_config,
             javascript_config,
+            foam_config,
             rust_config,
             haskell_config,
             nix_config,
@@ -67,6 +71,25 @@ impl Tagger<'_> {
                     exit(1)
                 }
             }
+        }
+    }
+
+    fn parse_by_content(&mut self, filename: &str, contents: &[u8]) -> Vec<Tag> {
+        if let Ok(s) = std::str::from_utf8(contents) {
+            let first_chars = &s[..std::cmp::min(self.config.file_type_detection_chars, s.len())];
+            match first_chars {
+                s if s.contains("FoamFile") => {
+                    foam::generate_tags(
+                        &mut self.context,
+                        &self.foam_config,
+                        filename,
+                        contents,
+                    )
+                },
+                _ => vec![],
+            }
+        } else {
+            return vec![]
         }
     }
 
@@ -99,9 +122,9 @@ impl Tagger<'_> {
                 Some("swift") => {
                     swift::generate_tags(&mut self.context, &self.swift_config, filename, contents)
                 }
-                _ => vec![],
+                _ => self.parse_by_content(filename, contents),
             },
-            None => vec![],
+            None => self.parse_by_content(filename, contents),
         }
     }
 

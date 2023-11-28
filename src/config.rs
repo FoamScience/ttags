@@ -23,6 +23,7 @@ pub struct Config {
     pub relative_path: String,
     pub append: bool,
     pub lsp: bool,
+    pub file_type_detection_chars: usize,
 }
 
 impl Config {
@@ -34,6 +35,11 @@ impl Config {
         let tag_path = Self::path_to_string(Self::fetch_tag_file(&matches));
         let relative_path = Self::path_to_string(Self::fetch_relative_path(&matches));
         let append = matches.is_present("append") || lsp;
+        let file_type_detection_chars = matches
+            .value_of("file_type_detection_chars")
+            .unwrap()
+            .parse()
+            .unwrap();
 
         Self {
             files,
@@ -41,6 +47,7 @@ impl Config {
             relative_path,
             append,
             lsp,
+            file_type_detection_chars,
         }
     }
 

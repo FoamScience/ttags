@@ -5,6 +5,7 @@ use std::error::Error;
 
 pub mod cli;
 pub mod config;
+pub mod foam;
 pub mod generate;
 pub mod haskell;
 pub mod javascript;
